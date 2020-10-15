@@ -8,7 +8,6 @@ class Post
     private $date;
     private $authorName;
     private $content;
-    private $jsonList = [];
 
 
     public function __construct(string $title, $date, string $authorName, string $content)
@@ -21,24 +20,12 @@ class Post
     }
 
 
-    public function fetchPosts()
-    {
-        $this->jsonList = json_decode(file_get_contents('guestbook.json'), true);
-
-        return $this->jsonList;
-    }
-
-
     /**
      * @return string
      */
     public function getTitle(): string
     {
-        if (!isset($this->title)) {
-            $this->title = "";
-        } else {
-            $this->title = (string)$this->title;
-        }
+
         return $this->title;
     }
 
@@ -48,11 +35,7 @@ class Post
      */
     public function getContent(): string
     {
-        if (!isset($this->content)) {
-            $this->content = "";
-        } else {
-            $this->content = (string)$this->content;
-        }
+
         return $this->content;
     }
 
@@ -61,11 +44,7 @@ class Post
      */
     public function getAuthorName(): string
     {
-        if (!isset($this->authorName)) {
-            $this->authorName = "";
-        } else {
-            $this->authorName = (string)$this->authorName;
-        }
+
         return $this->authorName;
     }
 }
