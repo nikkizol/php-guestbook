@@ -6,9 +6,10 @@ $users = ['John Doe', 'Joe Doe', 'John Smith', 'An Onymous'];
 $articles = ['Terror over london', 'Football: a useless hobby?', 'Economic crisis ahead, says expert', 'Fortis is Fortwas'];
 //end controller
 //start view
+session_start();
 
 if (!isset($_POST['title'])) {
-$_POST['title'] = "";
+    $_POST['title'] = "";
 }
 
 if (!isset($_POST['date'])) {
@@ -20,14 +21,34 @@ if (!isset($_POST['name'])) {
 if (!isset($_POST['text'])) {
     $_POST['text'] = "";
 }
-$guestBook = new Post($_POST['title'], $_POST['date'], $_POST['name'], $_POST['text']);
+$messagePost = new Post($_POST['title'], $_POST['date'], $_POST['name'], $_POST['text']);
 
-$title = $guestBook->getTitle();
+$title = $messagePost->getTitle();
 $date = date("Y/m/d h:i:sa");
-$name = $guestBook->getAuthorName();
-$message = $guestBook->getContent();
-$entryarray = ['message' => $message, 'name' => $name, 'date' => $date, 'title' => $title];
-var_dump($entryarray);
+$name = $messagePost->getAuthorName();
+$message = $messagePost->getContent();
+$messageArray = ['message' => $message, 'name' => $name, 'date' => $date, 'title' => $title];
+var_dump($messageArray);
+
+$guestbook = new PostLoader();
+
+if (!isset($_SESSION['guestbook'])) {
+    $_SESSION['guestbook'] = $guestbook;
+} else {
+    $guestbook = $_SESSION['guestbook'];
+}
+
+if ($_POST['name'] != "") {
+    $guestbook->pushToArray($messageArray);
+}
+$file = "guestbook.json";
+$arrayOfMessages = $guestbook->getAllpost();
+var_dump($arrayOfMessages);
+$encoded = $guestbook->encodeAllpost();
+var_dump($encoded);
+$saveInJson = $guestbook->saveInJson($file, $encoded);
+var_dump($saveInJson);
+
 
 ?>
 <!DOCTYPE html>
@@ -61,7 +82,7 @@ var_dump($entryarray);
         <input id="name" name="name" required>
     </section>
     <section>
-        <label for="Text">Text</label><br>
+        <label for="text">Text</label><br>
         <textarea id="text" name="text" rows="4" cols="50" required></textarea>
     </section>
     <input type="submit" name="submitButton">
