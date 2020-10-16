@@ -7,7 +7,7 @@ $articles = ['Terror over london', 'Football: a useless hobby?', 'Economic crisi
 //end controller
 //start view
 $file = "guestbook.json";
-session_start();
+//session_start();
 
 if (!isset($_POST['title'])) {
     $_POST['title'] = "";
@@ -22,41 +22,25 @@ if (!isset($_POST['name'])) {
 if (!isset($_POST['text'])) {
     $_POST['text'] = "";
 }
-$messagePost = new Post($_POST['title'], $_POST['date'], $_POST['name'], $_POST['text']);
-$title = $messagePost->getTitle();
-$date = date("Y/m/d h:i:sa");
-$name = $messagePost->getAuthorName();
-$message = $messagePost->getContent();
-$messageArray = ['message' => $message, 'name' => $name, 'date' => $date, 'title' => $title];
-var_dump($messageArray);
-
-$guestbook = new PostLoader();
-
-if (!isset($_SESSION['guestbook'])) {
-    $_SESSION['guestbook'] = $guestbook;
-} else {
-    $guestbook = $_SESSION['guestbook'];
-}
 
 
+$messagePost = new Post($_POST['name'], $_POST['title'], $_POST['date'], $_POST['text']);
 
 if (isset($_POST['submit'])) {
-    $guestbook->pushToArray($messageArray);
-    $arrayOfMessages = $guestbook->getAllpost();
-    var_dump($arrayOfMessages);
-    $encoded = $guestbook->encodeAllpost();
-    var_dump($encoded);
-    $saveInJson = $guestbook->saveInJson($file, $encoded);
-    var_dump($saveInJson);
+    $title = $messagePost->getTitle();
+    $date = date("Y/m/d h:i:sa");
+    $name = $messagePost->getAuthorName();
+    $message = $messagePost->getContent();
+    $guestbook = new PostLoader($name, $title, $date, $message);
+    $guestbook->saveData();
 }
-
 
 $json = @file_get_contents('guestbook.json');
 $data = json_decode($json, true);
-
-$last20Msg = array_slice($data, -20);
-
-
+$last20Msg = array();
+if (!empty($json)) {
+    $last20Msg = array_slice($data, -20);
+}
 
 ?>
 <!DOCTYPE html>
@@ -76,6 +60,7 @@ $last20Msg = array_slice($data, -20);
             margin: auto;
             width: 80%;
         }
+
         .msg {
             padding: 10px;
         }

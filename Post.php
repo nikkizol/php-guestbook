@@ -10,7 +10,7 @@ class Post
     private $content;
 
 
-    public function __construct(string $title, $date, string $authorName, string $content)
+    public function __construct(string $authorName, string $title, $date, string $content)
     {
 
         $this->title = $title;
@@ -18,7 +18,6 @@ class Post
         $this->authorName = $authorName;
         $this->content = $content;
     }
-
 
     /**
      * @return string
