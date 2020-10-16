@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 class PostLoader
 {
-    private $msgArray = [];
+    private array $msgArray = [];
 
     function __construct($name, $title, $date, $message)
     {
         $this->msgArray = ['name' => $name, 'title' => $title, 'date' => $date, 'message' => $message];
     }
-
 
     public function saveData()
     {
